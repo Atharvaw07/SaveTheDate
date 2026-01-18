@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--
+    SAVE THE DATE CARD - DYNAMIC COLOR VARIANTS
+
+    Usage Instructions:
+    ===================
+
+    Simply modify the <body> tag to add the data-variant attribute:
+
+    DEFAULT THEME (Warm/Burgundy): <body>
+    COLD THEME (Blue/Silver):      <body data-variant="cold">
+    DARK THEME (Gothic/Black):     <body data-variant="dark">
+    LIGHT THEME (Pastel/White):    <body data-variant="light">
+
+    Available Variants:
+    - warm: Burgundy wine theme (default)
+    - cold: Navy blue with cyan accents
+    - dark: Charcoal black with hot pink accents
+    - light: Clean white with coral accents
+
+    All colors, textures, and animations automatically adapt to the selected variant.
+    -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Save the Date - Preetha & Saroop</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💕</text></svg>">
+    <!-- Google Fonts: Bodoni Moda for luxury, Lato for clean modern details -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400;0,6..96,600;1,6..96,400&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        /* ===== VARIANT 1: WARM COLORS (Burgundy/Wine Theme) ===== */
+        :root {
+            --bg-color: #2b1410;        /* Deep burgundy */
+            --card-bg: #3a1a14;        /* Rich wine */
+            --text-primary: #f5e6d3;   /* Champagne ivory */
+            --text-secondary: #d6b98c; /* Muted gold */
+            --accent: #b11226;        /* Royal burgundy red */
+            --accent-dark: #8c0f1f;
+            --border-color: #caa46a;   /* Gold border */
+            --hidden-bg: #4a2018;     /* Hidden content background */
+        }
+
+        /* ===== VARIANT 2: COLD COLORS (Blue/Silver Theme) ===== */
+        [data-variant="cold"] {
+            --bg-color: #0f1419;        /* Deep navy */
+            --card-bg: #1a2332;        /* Dark slate */
+            --text-primary: #e8f4f8;   /* Ice blue */
+            --text-secondary: #a8c7d6; /* Silver blue */
+            --accent: #00bcd4;        /* Cyan */
+            --accent-dark: #0097a7;
+            --border-color: #607d8b;   /* Blue grey */
+            --hidden-bg: #243447;     /* Dark blue grey */
+        }
+
+        /* ===== VARIANT 3: DARK COLORS (Dark/Gothic Theme) ===== */
+        [data-variant="dark"] {
+            --bg-color: #0a0a0a;        /* Almost black */
+            --card-bg: #1a1a1a;        /* Charcoal */
+            --text-primary: #ffffff;   /* Pure white */
+            --text-secondary: #cccccc; /* Light grey */
+            --accent: #ff006e;        /* Hot pink */
+            --accent-dark: #cc0057;
+            --border-color: #333333;   /* Dark grey */
+            --hidden-bg: #2a2a2a;     /* Dark grey */
+        }
+
+        /* ===== VARIANT 4: LIGHT COLORS (Pastel Theme) ===== */
+        [data-variant="light"] {
+            --bg-color: #fefefe;        /* Off white */
+            --card-bg: #ffffff;        /* Pure white */
+            --text-primary: #2c3e50;   /* Dark navy */
+            --text-secondary: #7f8c8d; /* Grey */
+            --accent: #e74c3c;        /* Coral red */
+            --accent-dark: #c0392b;
+            --border-color: #ecf0f1;   /* Light grey */
+            --hidden-bg: #f8f9fa;     /* Very light grey */
+        }
+
+        body {
+            margin: 0;
+            padding: 20px 0; /* Add padding for small vertical screens */
+            background-color: var(--bg-color);
+            font-family: 'Lato', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: var(--text-primary);
+            /* Prevent overscroll on mobile */
+            overscroll-behavior-y: none;
+            box-sizing: border-box;
+        }
+
+        /* --- MOBILE FIRST CARD STYLES --- */
+        .card {
+            background-color: var(--card-bg);
+            width: 88%; /* Slightly wider on mobile */
+            max-width: 340px; /* Default for mobile */
+            padding: 35px 20px; /* Tighter padding for mobile */
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            text-align: center;
+            position: relative;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        /* Decorative Inner Border */
+        .card::after {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 1px solid var(--border-color);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'Bodoni Moda', serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 1.5rem; /* Smaller for mobile */
+            letter-spacing: 2px;
+            color: var(--text-primary);
+            margin: 0 0 30px 0;
+        }
+
+        .footer-names {
+            font-family: 'Bodoni Moda', serif;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            margin-top: 30px;
+            letter-spacing: 1px;
+            font-style: italic;
+        }
+
+        .footer-note {
+            font-size: 0.7rem;
+            color: #999;
+            margin-top: 20px;
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* --- HEART SCRATCH CONTAINER --- */
+        .heart-container {
+            position: relative;
+            /* Dimensions fixed to ensure canvas math works perfectly */
+            width: 260px; 
+            height: 230px; 
+            margin: 0 auto;
+            /* Clip the container into a heart shape */
+            clip-path: path("M130 218 C130 218, 260 148, 260 83 C260 27, 204 -10, 158 18 C130 37, 130 37, 130 37 C130 37, 130 37, 102 18 C56 -10, 0 27, 0 83 C0 148, 130 218, 130 218 Z");
+            -webkit-clip-path: path("M130 218 C130 218, 260 148, 260 83 C260 27, 204 -10, 158 18 C130 37, 130 37, 130 37 C130 37, 130 37, 102 18 C56 -10, 0 27, 0 83 C0 148, 130 218, 130 218 Z");
+            cursor: pointer;
+            overflow: hidden;
+            transform: scale(0.95); /* Slightly smaller on very narrow mobiles */
+            transition: transform 0.3s ease;
+            touch-action: none;
+            /* Fix for some mobile rendering */
+            -webkit-transform: translate3d(0,0,0);
+        }
+        
+        .heart-container:hover {
+            transform: scale(1.0);
+        }
+
+        /* The hidden content underneath */
+        .hidden-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--hidden-bg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 1;
+            border: 1px solid #f0f0f0; 
+        }
+
+        .hidden-content p {
+            margin: 4px 0;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-family: 'Lato', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .hidden-content .date {
+            font-size: 2rem;
+            font-weight: 400;
+            color: var(--text-primary);
+            margin: 12px 0;
+            font-family: 'Bodoni Moda', serif;
+        }
+        
+        .hidden-content .save-text {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--warm-dark);
+            font-weight: 700;
+        }
+
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            transition: opacity 0.8s ease;
+        }
+
+        /* --- BUTTON --- */
+        .calendar-btn-container {
+            margin-top: 30px;
+            height: 50px;
+            opacity: 0;
+            transition: opacity 1s ease;
+            pointer-events: none;
+        }
+        
+        .calendar-btn-container.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .btn {
+            background-color: transparent;
+            color: var(--accent);
+            padding: 12px 25px;
+            border: 1px solid var(--accent);
+            border-radius: 0; 
+            font-family: 'Lato', sans-serif;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--accent);
+            color: white;
+            box-shadow: 0 5px 15px rgba(177, 18, 38, 0.3);
+        }
+
+        .noselect {
+            -webkit-touch-callout: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* --- DESKTOP / TABLET SCALING --- */
+        @media (min-width: 768px) {
+            .card {
+                max-width: 450px;
+                padding: 60px 40px;
+                box-shadow: 0 25px 50px rgba(0,0,0,0.1);
+            }
+            
+            .card::after {
+                top: 15px;
+                left: 15px;
+                right: 15px;
+                bottom: 15px;
+            }
+
+            h1 {
+                font-size: 2rem;
+                margin-bottom: 40px;
+                letter-spacing: 4px;
+            }
+
+            .heart-container {
+                transform: scale(1); /* Full size on desktop */
+            }
+            
+            .heart-container:hover {
+                transform: scale(1.05);
+            }
+
+            .footer-names {
+                font-size: 1.5rem;
+                margin-top: 40px;
+            }
+
+            .footer-note {
+                font-size: 0.8rem;
+            }
+
+            .hidden-content .date {
+                font-size: 2.4rem;
+            }
+            
+            .btn {
+                padding: 14px 35px;
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body data-variant="warm">
+
+    <!--
+    HOW TO USE DIFFERENT VARIANTS:
+
+    Simply modify the <body> tag below to add the data-variant attribute:
+
+    For Cold Theme (Blue/Silver): <body data-variant="cold">
+    For Dark Theme (Gothic/Black): <body data-variant="dark">
+    For Light Theme (Pastel/White): <body data-variant="light">
+    Default Warm Theme (Burgundy): <body>
+
+    Just replace the body tag with your chosen variant!
+    -->
+    <div class="card noselect">
+        <div class="content-wrapper">
+            <h1>Save the Date</h1>
+
+            <div class="heart-container" id="heartContainer">
+                <!-- Hidden Information -->
+                <div class="hidden-content">
+                    <p>We are getting married</p>
+                    <div class="date">16.07.26</div>
+                    <div class="save-text">Preetha & Saroop</div>
+                </div>
+                
+                <!-- Scratch Surface -->
+                <canvas id="scratchCanvas"></canvas>
+            </div>
+
+            <div class="footer-names">
+                PREETHA & SAROOP
+            </div>
+
+            <div class="calendar-btn-container" id="btnContainer">
+                <!-- Google Calendar Link -->
+                <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Wedding+Save+the+Date:+Preetha+%26+Saroop&dates=20260716/20260717&details=We+invite+you+to+celebrate+our+special+day!&location=" target="_blank" class="btn">
+                    Add to Calendar
+                </a>
+            </div>
+
+            <div class="footer-note">
+                Scratch the heart to reveal
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('scratchCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('heartContainer');
+        const btnContainer = document.getElementById('btnContainer');
+        let isDrawing = false;
+        let revealed = false;
+
+        const width = 260;
+        const height = 230;
+        canvas.width = width;
+        canvas.height = height;
+
+        function createScratchTexture() {
+            // Get computed accent colors from CSS variables
+            const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+            const accentDarkColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-dark').trim();
+            const borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim();
+
+            ctx.fillStyle = accentColor;
+            ctx.fillRect(0, 0, width, height);
+
+            for (let i = 0; i < 4000; i++) {
+                const x = Math.random() * width;
+                const y = Math.random() * height;
+                const size = Math.random() * 2 + 1;
+                const colors = [accentColor, accentDarkColor, borderColor];
+                ctx.fillStyle = colors[Math.floor(Math.random() * colors.length)];
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        createScratchTexture();
+
+        function getConfettiColors() {
+            const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+            const accentDarkColor = getComputedStyle(document.documentElement).getPropertyValue('--accent-dark').trim();
+            const borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim();
+            const textSecondary = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim();
+
+            return [accentColor, accentDarkColor, borderColor, textSecondary];
+        }
+
+        function getMousePos(canvas, evt) {
+            const rect = canvas.getBoundingClientRect();
+            // Handle both touch and mouse events; use first touch point
+            const clientX = evt.touches ? evt.touches[0].clientX : evt.clientX;
+            const clientY = evt.touches ? evt.touches[0].clientY : evt.clientY;
+            
+            // Calculate scale in case of CSS transforms
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        function scratch(e) {
+            if (!isDrawing || revealed) return;
+            
+            // Crucial: Prevent scrolling while scratching
+            if(e.cancelable && e.type.startsWith('touch')) {
+                e.preventDefault();
+            }
+            
+            const pos = getMousePos(canvas, e);
+            const x = pos.x;
+            const y = pos.y;
+
+            ctx.globalCompositeOperation = 'destination-out';
+            ctx.beginPath();
+            ctx.arc(x, y, 22, 0, Math.PI * 2); 
+            ctx.fill();
+
+            if (Math.random() > 0.4) checkProgress();
+        }
+
+        // Add event listeners with non-passive flag for touch to allow preventDefault
+        canvas.addEventListener('mousedown', (e) => { isDrawing = true; scratch(e); });
+        canvas.addEventListener('touchstart', (e) => { isDrawing = true; scratch(e); }, {passive: false});
+        
+        window.addEventListener('mouseup', () => { isDrawing = false; });
+        window.addEventListener('touchend', () => { isDrawing = false; });
+        
+        canvas.addEventListener('mousemove', scratch);
+        canvas.addEventListener('touchmove', scratch, {passive: false});
+
+        function checkProgress() {
+            if (revealed) return;
+
+            const imageData = ctx.getImageData(0, 0, width, height);
+            const pixels = imageData.data;
+            let transparentPixels = 0;
+            const sampleRate = 16;
+            
+            for (let i = 3; i < pixels.length; i += sampleRate) { 
+                if (pixels[i] < 128) {
+                    transparentPixels++;
+                }
+            }
+
+            const totalPixels = pixels.length / sampleRate;
+            const percent = (transparentPixels / totalPixels) * 100;
+
+            if (percent > 45) {
+                revealAll();
+            }
+        }
+
+        function revealAll() {
+            revealed = true;
+            canvas.style.opacity = '0'; 
+            
+            // Enhanced Confetti Explosion
+            const duration = 1500;
+            const end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: getConfettiColors()
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: getConfettiColors()
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+
+            // Big center burst
+            setTimeout(() => {
+                confetti({
+                    particleCount: 200,
+                    spread: 120,
+                    origin: { y: 0.6 },
+                    colors: getConfettiColors(),
+                    gravity: 0.8,
+                    scalar: 1.1
+                });
+            }, 200);
+
+            setTimeout(() => {
+                canvas.style.display = 'none';
+                btnContainer.classList.add('visible');
+            }, 800);
+        }
+
+        // Variant System Usage:
+        // Add data-variant="cold|dark|light" to the <body> tag to change color scheme
+        // Example: <body data-variant="cold"> for cold blue theme
+        // Default is "warm" (burgundy theme) if no data-variant is specified
+    </script>
+</body>
+</html>
